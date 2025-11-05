@@ -6,89 +6,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-
     :root { color-scheme: light; }
     * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;           
-      padding: 24px;         
+      background-color: #f6f7f9;
+      margin: 0;
+    }
+
+    /* 页面容器：左右留白，自适应间距与最大宽度 */
+    .page {
+      max-width: 900px;                       /* 限制内容行宽，避免横向“挤” */
+      margin: 0 auto;
+      padding: clamp(12px, 4vw, 32px);        /* 小屏 12px，随屏变到大屏 32px */
       text-align: center;
     }
-    h1 { color: #333; margin: 0 0 12px; }
 
- 
+    h1 {
+      color: #333;
+      margin: 8px 0 14px;
+      line-height: 1.2;
+    }
+
     .button {
       display: inline-block;
       background-color: #007bff;
       color: #fff;
       padding: 12px 20px;
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: bold;
-      margin: 12px 0 8px;
+      margin: 10px 0 6px;
       cursor: pointer;
       border: none;
     }
     .button:hover { background-color: #0056b3; }
 
-  
+    .hint {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 12px;
+    }
+    .hint a { color: #007bff; text-decoration: none; }
+    .hint a:hover { text-decoration: underline; }
+
     .viewer {
       width: 100%;
-      max-width: 1200px;
       margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
     }
 
     iframe {
       display: block;
       width: 100%;
-      height: 90vh; 
+      height: 68vh;                 /* ✅ 手机端别太满：保留上下空间 */
       border: none;
-      margin-top: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       background: #fff;
     }
 
-
-    @media (max-width: 640px) {
-      body { padding: 12px; }
-      iframe { height: 92vh; box-shadow: none; }
+    /* 中/大屏：预览更高一些，仍保留左右留白 */
+    @media (min-width: 768px) {
+      iframe { height: 78vh; }
     }
-
-
-    @media (min-width: 1024px) {
-      body { padding: 40px; }
+    @media (min-width: 1200px) {
+      .page { padding: 40px; }
+      iframe { height: 82vh; }
     }
-
-
-    .hint {
-      margin: 6px 0 0;
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .hint a { color: #007bff; text-decoration: none; }
-    .hint a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>Gabriela Zeng CV</h1>
+  <div class="page">
+    <h1>Gabriela Zeng CV</h1>
 
-  
-  <button id="downloadBtn" class="button">📄 Download Resume (PDF)</button>
-  <div class="hint">
-    On mobile? <a href="Gabriela_Zeng.pdf" target="_blank" rel="noopener">Open PDF in a new tab</a>
-  </div>
+    <!-- 下载按钮（强制下载，跨浏览器可靠） -->
+    <button id="downloadBtn" class="button">📄 Download Resume (PDF)</button>
+    <div class="hint">
+      On mobile? <a href="Gabriela_Zeng.pdf" target="_blank" rel="noopener">Open PDF in a new tab</a>
+    </div>
 
-  <div class="viewer">
-    
-    <iframe src="Gabriela_Zeng.pdf" title="Gabriela Zeng CV"></iframe>
+    <!-- 预览容器 -->
+    <div class="viewer">
+      <iframe src="Gabriela_Zeng.pdf" title="Gabriela Zeng CV"></iframe>
+    </div>
   </div>
 
   <script>
-  
+    // 强制下载（解决部分浏览器忽略 <a download> 的问题）
     document.getElementById('downloadBtn').addEventListener('click', async () => {
-      const pdfPath = 'Gabriela_Zeng.pdf';
+      const pdfPath = 'Gabriela_Zeng.pdf'; // 若文件名不同，这里同步修改
       try {
         const resp = await fetch(pdfPath, { cache: 'no-store' });
         if (!resp.ok) throw new Error('File not found');
@@ -97,7 +106,7 @@
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Gabriela_Zeng.pdf';
+        a.download = 'Gabriela_Zeng.pdf';     // 保存时默认文件名
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -110,4 +119,5 @@
   </script>
 </body>
 </html>
+
 
